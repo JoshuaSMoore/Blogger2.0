@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Blogger.Models;
 using Dapper;
 
 namespace Blogger.Repositories
@@ -22,13 +23,25 @@ namespace Blogger.Repositories
 
     public Blog GetBlogById(int blogId)
     {
-      return _db
-      .QueryFirstOrDefault<Blog>("SELECT * FROM blogs WHERE id = @blogId", new { blogId });  
+      string sql = @"
+      SELECT
+      b.*,
+      a.*
+      FROM blogs b
+      JOIN accounts a on b.creatorId = a.id
+      WHERE b.id = @blogId;
+      ";
+      return _db.Query<Blog, Account, Blog>(sql, (b, a) =>
+    {
+      b.Creator = a;
+      return b;
+    }, new{blogId}).FirstOrDefault(); 
     }
     public Blog CreateBlog(Blog blogData)
     {
       string sql = @"
-      INSERT INTO blogs(creatorId,
+      INSERT INTO blogs(
+        creatorId,
         title,
         body,
         imgUrl,
