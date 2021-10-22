@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Blogger.Repositories;
 
@@ -16,5 +17,20 @@ namespace Blogger.Services
   {
     return _blogsRepository.Get();
   }
+  public Blog GetBlogById(int blogId)
+    {
+      Blog foundBlog = _blogsRepository.GetBlogById(blogId);
+      if(foundBlog == null)
+      {
+        throw new Exception("Nope, not a blog dude");
+      }
+      return foundBlog;
+    }
+
+    public Blog CreateBlog(Blog blogData)
+    {
+      return _blogsRepository.CreateBlog(blogData);
+    }
+
   }
 }

@@ -6,3 +6,6 @@ CREATE TABLE IF NOT EXISTS accounts(
   email varchar(255) COMMENT 'User Email',
   picture varchar(255) COMMENT 'User Picture'
 ) default charset utf8 COMMENT '';
+
+INSERT INTO blogs(title, body)
+VALUES ("THE NEW BLOG", "COOL COOL COOL COOL")
