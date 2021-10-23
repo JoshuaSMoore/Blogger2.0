@@ -77,6 +77,23 @@ namespace Blogger.Controllers
          return BadRequest(e.Message);
        }
      }
+     
+     [Authorize]
+     [HttpPut("{blogId}")]
+
+     public async Task<ActionResult<Blog>> UpdateBlog(int blogId, [FromBody] Blog blogData)
+     {
+       try
+       {
+            Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+            var blog = _blogsService.UpdateBlog(blogId, blogData);
+            return Ok(blog);
+       }
+       catch (System.Exception e)
+       {
+         return BadRequest(e.Message);
+       }
+     }
   }
 
 }

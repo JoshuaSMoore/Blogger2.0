@@ -41,5 +41,17 @@ namespace Blogger.Services
       }
       _blogsRepository.DeleteBlog(blogId);
     }
+
+    public Blog UpdateBlog(int blogId, Blog blogData)
+   {
+     var blog = GetBlogById(blogId);
+
+     blog.Title = blogData.Title ?? blog.Title;
+     blog.Body = blogData.Body ?? blog.Body;
+     blog.ImgUrl = blogData.ImgUrl ?? blog.ImgUrl;
+     blog.Published = blogData.Published;
+     _blogsRepository.UpdateBlog(blogId, blogData);
+     return blog;
+   }
   }
 }

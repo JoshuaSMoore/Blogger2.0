@@ -70,5 +70,29 @@ namespace Blogger.Repositories
         throw new Exception("Cannot Delete a Blog that is already delorted");
       }
     }
+
+    public Blog UpdateBlog(int blogId, Blog blogData)
+    {
+      blogData.Id = blogId;
+      var sql = @"
+      UPDATE blogs
+      SET
+      title = @Title,
+      body = @Body,
+      imgUrl = @ImgUrl,
+      published = @Published
+      WHERE id = @Id";
+      var affectedRows = _db.Execute(sql, blogData);
+
+      if (affectedRows > 1)
+      {
+        throw new System.Exception("What the heck are you doing?");
+      }
+      if (affectedRows == 0)
+      {
+        throw new System.Exception("Update did not work");
+      }
+      return blogData;
+    }
   }
 }
