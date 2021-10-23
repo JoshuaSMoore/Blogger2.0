@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Blogger.Models;
 using Dapper;
 
 namespace Blogger.Repositories
@@ -20,12 +21,12 @@ namespace Blogger.Repositories
       INSERT INTO comments(
        creatorId,
        body,
-       blogId
+       blog
        )
        VALUES (
          @CreatorId,
          @Body,
-         @BlogId
+         @Blog
        );
        SELECT LAST_INSERT_ID();
         ";
@@ -36,14 +37,37 @@ namespace Blogger.Repositories
 
     public Comment GetById(int commentId)
     {
-      return _db.QueryFirstOrDefault<Comment>("SELECT * FROM comments WHERE id = @commentId", new {commentId});
+      string sql = @"
+      SELECT
+      c.*,
+      a.*
+      FROM comments c
+      JOIN accounts a on c.creatorId = a.id
+      WHERE c.id = @commentId;
+      ";
+      return _db.Query<Comment, Account, Comment>(sql, (c, a) =>
+    {
+      c.Creator = a;
+      return c;
+    }, new{commentId}).FirstOrDefault(); 
     }
 
-    public List<Comment> GetCommentsByBlog(int blogId)
+
+    public List<Comment> GetCommentsByBlog(int blog)
     {
       string sql = @"
-      SELECT * FROM comments c WHERE c.blogId = @blogId";
-      return _db.Query<Comment>(sql, new {blogId}).ToList();
+      SELECT
+      c.*,
+      a.*
+      FROM comments c
+      JOIN accounts a on c.creatorId = a.id
+      WHERE c.blog = @Blog;
+      ";
+      return _db.Query<Comment, Account, Comment>(sql, (c, a) =>
+    {
+      c.Creator = a;
+      return c;
+    }, new{blog}).ToList(); 
     }
     public Comment EditComment(int commentId, Comment commentData)
     {
@@ -61,9 +85,9 @@ namespace Blogger.Repositories
       return commentData;
     }
 
-   public void RemoveComment(int commentId)
+   internal void RemoveComment(int commentId)
     {
-      string sql = "DELETE FROM comments WHERE id = @commentId LIMIT 1;";
+      string sql = "DELETE FROM comments WHERE id = @id LIMIT 1;";
       var affectedRows = _db.Execute(sql, new {commentId});
       if(affectedRows == 0)
       {

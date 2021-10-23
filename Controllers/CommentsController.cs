@@ -26,8 +26,8 @@ namespace Blogger.Controller
     {
          Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
          commentData.CreatorId = userInfo.Id;
+         commentData.Creator = userInfo;
          Comment createdComment = _commentsService.CreateComment(commentData);
-         createdComment.Creator = userInfo;
          return createdComment;
     }
     catch (System.Exception e)
@@ -36,19 +36,18 @@ namespace Blogger.Controller
     }
   }
 
-  [HttpGet("{commentId}")]
-
-  public ActionResult<Comment> GetById(int commentId)
-  {
-    try
+ [HttpGet("{commentId}")]
+    public ActionResult<Comment> GetById(int commentId)
     {
-         return Ok(_commentsService.GetbyId(commentId));
+      try
+      {
+          return Ok(_commentsService.GetById(commentId));
+      }
+      catch (System.Exception e)
+      {
+        return BadRequest(e.Message);
+      }
     }
-    catch (System.Exception e)
-    {
-     return BadRequest(e.Message);
-    }
-  }
 
   [Authorize]
   [HttpPut("{commentId}")]
@@ -67,14 +66,15 @@ namespace Blogger.Controller
     }
   }
   [Authorize]
-  [HttpDelete]
+  [HttpDelete("{commentId}")]
 
-  public async Task<ActionResult<string>> RemoveComment(int commentId)
+  public async Task<ActionResult<Comment>> RemoveComment(int id)
   {
     try
     {
          Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-         _commentsService.RemoveComment(commentId, userInfo.Id);
+         var comment = _commentsService.RemoveComment(id, userInfo.Id);
+         comment.CreatorId = userInfo.Id;
          return Ok("Comment is now gone");
     }
     catch (System.Exception e)

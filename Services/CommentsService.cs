@@ -22,18 +22,18 @@ namespace Blogger.Services
       return _commentsRepository.GetCommentsByBlog(blogId);
     }
 
-    public Comment GetbyId(int commentId)
+    internal Comment GetById(int commentId)
     {
       Comment foundComment = _commentsRepository.GetById(commentId);
       if(foundComment == null)
-    {
-    throw new Exception("Nope no comment by this Id");
-  }
-  return foundComment;
-  }
+      {
+        throw new Exception("Invalid Blog Id");
+      }
+      return foundComment;
+    }
   public Comment EditComment(int commentId, Comment commentData)
   {
-    var comment = GetbyId(commentId);
+    var comment = GetById(commentId);
 
     comment.Body = commentData.Body ?? comment.Body;
 
@@ -42,14 +42,15 @@ namespace Blogger.Services
 
   }
 
-  internal void RemoveComment(int commentId, string userId)
+  internal Comment RemoveComment(int commentId, string userId)
     {
-      Comment foundComment = GetbyId(commentId);
+      Comment foundComment = GetById(commentId);
       if(foundComment.CreatorId != userId)
       {
-        throw new Exception("That aint your team");
+        throw new Exception("That aint your comment");
       }
       _commentsRepository.RemoveComment(commentId);
+      return foundComment;
     }
   }
 }
