@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -58,6 +59,16 @@ namespace Blogger.Repositories
         int id = _db.ExecuteScalar<int>(sql, blogData);
         blogData.Id = id;
         return blogData;
+    }
+
+    public void DeleteBlog(int blogId)
+    {
+      string sql = "DELETE FROM blogs WHERE id = @blogId LIMIT 1;";
+      var affectedRows = _db.Execute(sql, new {blogId});
+      if(affectedRows == 0)
+      {
+        throw new Exception("Cannot Delete a Blog that is already delorted");
+      }
     }
   }
 }

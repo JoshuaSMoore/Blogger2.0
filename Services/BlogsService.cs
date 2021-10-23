@@ -32,5 +32,14 @@ namespace Blogger.Services
       return _blogsRepository.CreateBlog(blogData);
     }
 
+    internal void DeleteBlog(int blogId, string userId)
+    {
+      Blog foundBlog = GetBlogById(blogId);
+      if(foundBlog.CreatorId != userId)
+      {
+        throw new Exception("This aint your Blog bruh");
+      }
+      _blogsRepository.DeleteBlog(blogId);
+    }
   }
 }
