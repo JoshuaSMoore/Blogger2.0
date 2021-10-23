@@ -10,6 +10,6 @@ CREATE TABLE IF NOT EXISTS accounts(
 CREATE TABLE IF NOT EXISTS comments(  
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     body VARCHAR(255) NOT NULL,
-    blogId VARCHAR(255) NOT NULL,
+    blogId int NOT NULL,
     creatorId VARCHAR(255) NOT NULL
 ) default charset utf8 comment '';

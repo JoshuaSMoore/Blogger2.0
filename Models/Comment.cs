@@ -7,6 +7,8 @@ namespace Blogger
  public class Comment
     {
         public int Id { get; set; }
+        [Required]
+        [MaxLength(30)]
         public string CreatorId { get; set; }
         [Required]
         [MaxLength(240)]
