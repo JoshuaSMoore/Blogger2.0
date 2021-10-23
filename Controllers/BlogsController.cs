@@ -13,10 +13,12 @@ namespace Blogger.Controllers
   public class BlogsController : ControllerBase
   {
     private readonly BlogsService _blogsService;
+    private readonly CommentsService _commentsService;
 
-    public BlogsController(BlogsService blogsService)
+    public BlogsController(BlogsService blogsService, CommentsService commentsService)
     {
       _blogsService = blogsService;
+      _commentsService = commentsService;
     }
     [HttpGet]
 
@@ -92,6 +94,19 @@ namespace Blogger.Controllers
        catch (System.Exception e)
        {
          return BadRequest(e.Message);
+       }
+     }
+     [HttpGet("{blogId}/comments")]
+
+     public ActionResult<List<Comment>> GetCommentsByBlog(int blogId)
+     {
+       try
+       {
+            return Ok(_commentsService.GetCommentsByBlog(blogId));
+       }
+       catch (System.Exception e)
+       {
+          return BadRequest(e.Message);
        }
      }
   }

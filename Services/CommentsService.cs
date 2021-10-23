@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Blogger.Repositories;
 
 namespace Blogger.Services
@@ -13,6 +14,11 @@ namespace Blogger.Services
     public Comment CreateComment(Comment commentData)
     {
       return _commentsRepository.CreateComment(commentData);
+    }
+
+    public List<Comment> GetCommentsByBlog(int blogId)
+    {
+      return _commentsRepository.GetCommentsByBlog(blogId);
     }
   }
 }

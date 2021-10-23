@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Dapper;
 
 namespace Blogger.Repositories
@@ -30,6 +32,13 @@ namespace Blogger.Repositories
         int id = _db.ExecuteScalar<int>(sql, commentData);
         commentData.Id = id;
         return commentData;
+    }
+
+    public List<Comment> GetCommentsByBlog(int blogId)
+    {
+      string sql = @"
+      SELECT * FROM comments c WHERE c.blogId = @blogId";
+      return _db.Query<Comment>(sql, new {blogId}).ToList();
     }
   }
 }
