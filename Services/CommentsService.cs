@@ -52,5 +52,10 @@ namespace Blogger.Services
       _commentsRepository.RemoveComment(commentId);
       return foundComment;
     }
+
+     public List<Comment> GetCommentsByAccount(string userId)
+    {
+      return _commentsRepository.GetCommentsByAccount(userId);
+    }
   }
 }

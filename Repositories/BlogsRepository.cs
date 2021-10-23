@@ -71,6 +71,12 @@ namespace Blogger.Repositories
       }
     }
 
+   internal List<Blog> GetBlogsByAccount(string userId)
+    {
+      string sql = "SELECT * FROM blogs b WHERE b.creatorId = @userId";
+      return _db.Query<Blog>(sql, new{userId}).ToList();
+    }
+
     public Blog UpdateBlog(int blogId, Blog blogData)
     {
       blogData.Id = blogId;

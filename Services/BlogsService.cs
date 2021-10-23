@@ -53,5 +53,10 @@ namespace Blogger.Services
      _blogsRepository.UpdateBlog(blogId, blogData);
      return blog;
    }
+
+     public List<Blog> GetBlogsByAccount(string userId)
+    {
+      return _blogsRepository.GetBlogsByAccount(userId);
+    }
   }
 }

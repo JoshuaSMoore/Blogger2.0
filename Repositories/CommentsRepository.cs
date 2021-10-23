@@ -85,7 +85,13 @@ namespace Blogger.Repositories
       return commentData;
     }
 
-   internal void RemoveComment(int commentId)
+    internal List<Comment> GetCommentsByAccount(string userId)
+    {
+      string sql = "SELECT * FROM comments c WHERE c.creatorId = @userId";
+      return _db.Query<Comment>(sql, new{userId}).ToList();
+    }
+
+    internal void RemoveComment(int commentId)
     {
       string sql = "DELETE FROM comments WHERE id = @id LIMIT 1;";
       var affectedRows = _db.Execute(sql, new {commentId});
