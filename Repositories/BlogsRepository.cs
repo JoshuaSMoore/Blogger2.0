@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using Blogger.Models;
 using Dapper;
-s
+
 namespace Blogger.Repositories
 {
   public class BlogsRepository
